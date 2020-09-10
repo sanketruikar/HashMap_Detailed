@@ -1,0 +1,89 @@
+How get method works in HashMap..?
+--Returns the value to which the specified key is mapped,null if this map contains no mapping for the key.
+--public V get(Object key) 
+    {
+        Node<K,V> e;
+        return (e = getNode(hash(key), key)) == null ? null : e.value;
+    }
+    getNode()--return the node--Node<K,V>
+ --  hash--
+     static final int hash(Object key) 
+     {
+        int h;
+        return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+     }
+     hashCode()--of object class
+ ---------------------------------------------------------------------------------------------------
+ What is HashMap..?  
+ HashMap is a Collection Class which implements Map Interface which allows us to Store object as Key,Value
+ pair where key should be unique.
+ ----------------------------------
+ What will happen if two different objects have the same hashcode?
+--They will just be added to the same bucket and equals() will be used to distinguish them.
+ Each bucket can contain a list of objects with the same hash code.
+ --When two unequal objects have the same hash value, this causes a collision in the hash table, because both objects want to be in the same slot (sometimes called a bucket).
+  The hash algorithm must resolve such collisions.
+  --HashMap handles the collision resolution by using the concept of chaining i.e., 
+    it stores the values in a linked list (or a balanced tree since Java8, depends on the number of entries). There is no collision in your example. 
+    You use the same key, so the old value gets replaced with the new one.
+ -----------------------------------------------------------------------------------------------------
+ How will you retrieve Value object  if two Keys will have the same hashcode?
+ --When put() method stores the key at the same bucket location collision would have occurred, 
+ so the bucket location upgrades itself to store multiple entries by forming a linked data 
+ structure, and once key.hashcode() find the bucket location, all the entries are traversed to 
+ find the correct key by comparing using equals() 
+ method and value from the corresponding entry will be returned.
+ ----------------------------------------------------------------------------------------------------
+ What get() method return if the key does not exist at HashMap?
+---returns null.
+-----------------------------------------------------------------------------------------------------
+What happens On HashMap in Java if the size of the HashMap  exceeds a given threshold defined by load factor ?"
+---Java HashMap re-size itself by creating a new bucket array of size twice of the previous size of 
+HashMap and then start putting every old element into that new bucket array. This process is called 
+rehashing because it also applies the hash function to find new bucket location. 
+--------------------------------------------------------------------------------------------------------
+do you see any problem with resizing of HashMap  in Java"
+---Yes there is potential race condition exists while resizing HashMap in Java, 
+if two thread at the same time found that now HashMap needs resizing and they both try to resizing
+--------------------------------------------------------------------------------------------------------
+Why String, Integer and other wrapper classes are considered good keys?
+--String, Integer and other wrapper classes are natural candidates of HashMap key, and 
+String is most frequently used key as well because String is immutable and final, and 
+overrides equals and hashcode() method. Other wrapper class also shares similar property. 
+Immutability is required, in order to prevent changes on fields used to calculate hashCode() 
+because if key object returns different hashCode during insertion and retrieval than it won't 
+be possible to get an object from HashMap. 
+-------------------------------------------------------------------------------------------------------
+Can we use any custom object as a key in HashMap?
+--Of course you can use any Object as key in Java HashMap provided it follows equals and 
+  hashCode contract and its hashCode should not vary once the object is inserted into Map. 
+  If the custom object is 
+  Immutable than this will be already taken care because you can not change it once created.
+------------------------------------------------------------------------------------------------------
+How HashMap  works in Java
+HashMap  works on the principle of hashing, we have put() and get() method for storing and 
+retrieving object from HashMap.When we pass both key and value to put() method to store on 
+HashMap, it uses key object hashcode() method to calculate hashcode and them by applying 
+hashing on that hashcode it identifies bucket location for storing value object. 
+While retrieving it uses key object equals method to find out correct key value pair and 
+return value object associated with that key. HashMap  uses linked list in case of collision
+and object will be stored in next node of linked list. Also, HashMap stores both key and value
+tuple in every node of linked list in the form of Map.Entry object. 
+-----------------------------------------------------------------------------------------------------
+What will happen if two different HashMap key objects have the same hashcode?
+They will be stored in the same bucket but no next node of linked list. And keys equals ()
+ method will be used to identify the correct key-value pair in HashMap.
+ -------------------------------------------------------------------------------------------------
+ How null key is handled in HashMap? 
+The null key is handled specially in HashMap, there are two separate methods for that putForNullKey(V value) and getForNullKey(). Later is an offloaded version of get() to look up null keys.  Null keys always map to index 0.
+
+
+
+
+
+
+
+
+ 
+     
+    
